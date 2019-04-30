@@ -52,13 +52,44 @@ if __name__ == '__main__':
 
         logger.debug('postprocess+')
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+        print(image.shape)
+
+        alist = []
+        # for i in range (0, 480):
+        #     for j in range (0, 640):
+        #         if (image[i, j, 0] == 255) and (image[i, j, 1] == 255) and (image[i, j, 2] == 255):
+        #             alist.append([i, j])
+        # arr = np.array(alist)
+
+        cv2.imshow('tf-pose-estimation result', image)
+        only_pose_image = image
+        for i in range (0, 480):
+            for j in range (0, 640):
+                if (image[i, j, 0] == 255) and (image[i, j, 1] == 255) and (image[i, j, 2] == 255):
+                    continue
+                else:
+                    only_pose_image[i,j, 0] = 0
+                    only_pose_image[i,j, 1] = 0
+                    only_pose_image[i,j, 2] = 0
+
+
+        #이미지를 이미지 프로세싱을 통해서 254만큼 빼서 값이 1이상 되는 것들만
+        #행렬에 그 좌표로 넣는다.
+
+        #alist.append([i,j,k])
+        #arr = np.array(alist)
+
+        #그리고 그 행렬을 저장하고
+        #OpenGL에서 띄워본다.
+
+        #선 연결된 부분은 연결된 것으로 처리하는게 좋다.
 
         logger.debug('show+')
         cv2.putText(image,
                     "FPS: %f" % (1.0 / (time.time() - fps_time)),
                     (10, 10),  cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                     (0, 255, 0), 2)
-        cv2.imshow('tf-pose-estimation result', image)
+        cv2.imshow('only_pose_image', only_pose_image)
         fps_time = time.time()
         if cv2.waitKey(1) == 27:
             break
