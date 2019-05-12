@@ -26,7 +26,7 @@ fps_time = 0
 
 def drawCube(vertices):
 
-    glColor(0.94,0.85,0.79)
+    glColor(0.94,0.85,0.79) #skin color (korean standard)
     glPointSize(16.0)
     glBegin(GL_POINTS)
     for vertex in vertices:
