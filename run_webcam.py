@@ -25,7 +25,10 @@ logger.addHandler(ch)
 fps_time = 0
 
 def drawCube(vertices):
-    glBegin(GL_LINES)
+
+    glColor(0.94,0.85,0.79)
+    glPointSize(16.0)
+    glBegin(GL_POINTS)
     for vertex in vertices:
             glVertex3fv(vertex)
     glEnd()
@@ -62,7 +65,8 @@ if __name__ == '__main__':
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
 
     gluPerspective(45, (display[0] / display[1]), 0.1, 50.0)
-    glTranslatef(0.0, 0.0, -9)
+    glTranslatef(-2.5, 2.0, -9)
+    glRotatef(-90, 0 ,0 ,1)
 
     while True:
 
@@ -71,6 +75,8 @@ if __name__ == '__main__':
         ##opengl_end
 
         ret_val, image = cam.read()
+
+        cv2.imshow('original cam image', image) #원본 이미지
 
         logger.debug('image process+')
         humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
@@ -93,8 +99,8 @@ if __name__ == '__main__':
             for j in range (0, 640):
                 if (image[i, j, 0] == 255) and (image[i, j, 1] == 255) and (image[i, j, 2] == 255):
 
-                    x_input = float(i) / 195
-                    y_input = float(j) / 162
+                    x_input = float(i) / 214.5
+                    y_input = float(j) / 178.2
                     vertices.append([x_input,y_input,0])
                     print([x_input,y_input,0])
                     continue
@@ -123,12 +129,21 @@ if __name__ == '__main__':
         #             "FPS: %f" % (1.0 / (time.time() - fps_time)),
         #             (10, 10),  cv2.FONT_HERSHEY_SIMPLEX, 0.5,
         #             (0, 255, 0), 2)
-        # cv2.imshow('only_pose_image', only_pose_image)
-        import matplotlib.pyplot as plt
+        cv2.imshow('only_pose_image', only_pose_image)
 
-        plt.plot(vertices[0],vertices[1])
-        print("plot 출력")
-        plt.savefig('demo.png')
+        # import matplotlib.pyplot as plt
+        #
+        # x_plot = np.array(vertices)[:,0:1]
+        #
+        # y_plot = np.array(vertices)[:,1:2]
+        #
+        # print("여기부터 vertices[0,1] print")
+        # print(x_plot)
+        # print("vertices[1] 인쇄")
+        # print(y_plot)
+        # plt.plot(x_plot,y_plot)
+        # print("plot 출력")
+        # plt.savefig('demo.png')
 
         fps_time = time.time()
         if cv2.waitKey(1) == 27:
